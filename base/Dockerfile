@@ -22,6 +22,7 @@ RUN mkdir -p /app/fountain
 WORKDIR /app/fountain
 RUN mkdir -p /src/minerva
 RUN mkdir -p /app/minerva
-RUN cd /src/minerva && git clone -b dtls-listen-refactor git://github.com/mcr/openssl.git
-RUN cd /src/minerva/openssl && ./Configure --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/linux-x86_64 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test linux-x86_64 && id && make
+RUN cd /src/minerva && git clone -b dtls-listen-refactor-1.1.1b git://github.com/mcr/openssl.git
+RUN cd /src/minerva/openssl && ./Configure --prefix=/usr --libdir=/lib --openssldir=/usr/lib/ssl no-idea no-mdc2 no-rc5 no-zlib no-ssl3 no-async linux-armv4 && id && make
+RUN cd /src/minerva/openssl && make install_sw
 
