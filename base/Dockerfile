@@ -5,7 +5,7 @@ RUN apk --cache-max-age 300 add --no-cache \
         bash perl \
         clang \
         curl \
-        gcc git \
+        gcc git g++ \
         gnupg \
         libc-dev \
         linux-headers \
