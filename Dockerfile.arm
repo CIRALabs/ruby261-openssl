@@ -1,3 +1,4 @@
+#FROM mcr314/openssl:linux_x86 as builder
 FROM openssl-mcr:base as builder
 
 # the DNS is rather unstable, seems like some kind of NAT issue
@@ -15,7 +16,7 @@ RUN /usr/local/rvm/bin/rvm cleanup all
 RUN /usr/local/rvm/bin/rvm disk-usage all
 
 RUN /usr/local/rvm/bin/rvm 2.6.1 do gem install rake-compiler
-RUN cd /app/minerva && git clone -b dtls-coap-client git://github.com/mcr/ruby-openssl.git
+RUN cd /app/minerva && git clone -b ies-cms-dtls git://github.com/mcr/ruby-openssl.git
 RUN cd /app/minerva/ruby-openssl && /usr/local/rvm/bin/rvm 2.6.1 do rake compile
 RUN /usr/local/rvm/bin/rvm 2.6.1 do gem install bundler
 RUN /usr/local/rvm/bin/rvm cleanup all
