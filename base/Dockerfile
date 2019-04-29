@@ -1,7 +1,7 @@
 FROM alpine:latest
 MAINTAINER Michael Richardson <mcr@sandelman.ca>
-RUN http_proxy='http://cacher.sandelman.ca:3142/' apk --cache-max-age 300 update
-RUN http_proxy='http://cacher.sandelman.ca:3142/' apk --cache-max-age 300 add --no-cache \
+RUN apk --cache-max-age 300 update
+RUN apk --cache-max-age 300 add --no-cache \
         bash perl \
         clang \
         curl \
