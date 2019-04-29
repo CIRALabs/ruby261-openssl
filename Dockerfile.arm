@@ -1,8 +1,6 @@
-#FROM mcr314/openssl:linux_x86 as builder
 FROM openssl-mcr:base as builder
 
-# the DNS is rather unstable, seems like some kind of NAT issue
-RUN dirmngr </dev/null & ping -c 3 keys.gnupg.net; sleep 2; ping -c 3 keys.gnupg.net; gpg --keyserver hkp://keys.gnupg.net --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN \curl -O https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer && \curl -O https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer.asc \
     && gpg --verify rvm-installer.asc \
     && bash rvm-installer stable
@@ -11,14 +9,15 @@ RUN \curl -O https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-ins
 RUN sed -e 's/ldd --version/&1 2>\&1/g' -i /usr/local/rvm/scripts/functions/detect/system
 
 RUN /usr/local/rvm/bin/rvm autolibs disable
-RUN /usr/local/rvm/bin/rvm install --disable-binary 2.6.1
+RUN /usr/local/rvm/bin/rvm install --disable-binary 2.6.3
 RUN /usr/local/rvm/bin/rvm cleanup all
 RUN /usr/local/rvm/bin/rvm disk-usage all
 
-RUN /usr/local/rvm/bin/rvm 2.6.1 do gem install rake-compiler
+RUN /usr/local/rvm/bin/rvm 2.6.3 do gem install rake-compiler
+RUN mkdir -p /app/minerva
 RUN cd /app/minerva && git clone -b ies-cms-dtls git://github.com/mcr/ruby-openssl.git
-RUN cd /app/minerva/ruby-openssl && /usr/local/rvm/bin/rvm 2.6.1 do rake compile
-RUN /usr/local/rvm/bin/rvm 2.6.1 do gem install bundler
+RUN cd /app/minerva/ruby-openssl && /usr/local/rvm/bin/rvm 2.6.3 do rake compile
+RUN /usr/local/rvm/bin/rvm 2.6.3 do gem install bundler
 RUN /usr/local/rvm/bin/rvm cleanup all
 RUN /usr/local/rvm/bin/rvm disk-usage all
 
