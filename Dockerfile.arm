@@ -1,4 +1,4 @@
-FROM openssl-mcr:base as builder
+FROM openssl-mcr:base32 as builder
 
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 62C9E5F4DA300D94AC36166BE206C29FBF04FF17
@@ -7,18 +7,18 @@ RUN \curl -O https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-ins
     && bash rvm-installer 1.29.8
 
 # this fixed the LDD --version that musl puts on stderr from confusing things
-RUN sed -e 's/ldd --version/&1 2>\&1/g' -i /usr/local/rvm/scripts/functions/detect_system
+RUN sed -e 's/ldd --version/&1 2>\&1/g' -i /usr/local/rvm/scripts/functions/detect/system
 
-RUN /usr/local/rvm/bin/rvm autolibs disable
-RUN /usr/local/rvm/bin/rvm install --disable-binary 2.6.3
-RUN /usr/local/rvm/bin/rvm cleanup all
-RUN /usr/local/rvm/bin/rvm disk-usage all
+RUN linux32 /usr/local/rvm/bin/rvm autolibs disable
+RUN linux32 /usr/local/rvm/bin/rvm install --disable-binary 2.6.3
+RUN linux32 /usr/local/rvm/bin/rvm cleanup all
+RUN linux32 /usr/local/rvm/bin/rvm disk-usage all
 
-RUN /usr/local/rvm/bin/rvm 2.6.3 do gem install rake-compiler
+RUN linux32 /usr/local/rvm/bin/rvm 2.6.3 do gem install rake-compiler
 RUN mkdir -p /app/minerva
 RUN cd /app/minerva && git clone -b ies-cms-dtls git://github.com/mcr/ruby-openssl.git
-RUN cd /app/minerva/ruby-openssl && /usr/local/rvm/bin/rvm 2.6.3 do rake compile
-RUN /usr/local/rvm/bin/rvm 2.6.3 do gem install bundler
+RUN cd /app/minerva/ruby-openssl && linux32 /usr/local/rvm/bin/rvm 2.6.3 do rake compile
+RUN linux32 /usr/local/rvm/bin/rvm 2.6.3 do gem install bundler
 RUN /usr/local/rvm/bin/rvm cleanup all
 RUN /usr/local/rvm/bin/rvm disk-usage all
 
